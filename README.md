@@ -22,7 +22,7 @@ docker run -d \
   -e FRP_LOCAL_HTTP_PORT=80 \
   -e FRP_REMOTE_HTTP_PORT=80 \
   -e FRP_LOCAL_HTTPS_PORT=443 \
-  -e FRP_REMOTE_HTTPS_PORT=443 \  
+  -e FRP_REMOTE_HTTPS_PORT=443 \
   ghcr.io/ldev1281/docker-frp:latest
 ```
 
