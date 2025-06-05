@@ -47,16 +47,16 @@ services:
 
 ## Environment Variables
 
-| Variable              | Description                                    | Required | Example         |
-| --------------------- | ---------------------------------------------- | -------- | --------------- |
-| FRP_HOST              | Hostname or IP address of the frp server       | Yes      | your.frp.server |
-| FRP_PORT              | Port number of the frp server                  | Yes      | 7000            |
-| FRP_TOKEN             | Authentication token for the connection        | Yes      | StrongToken     |
-| FRP_LOCAL_HOST        | Local host to proxy to (default: `127.0.0.1`)  | No       | 127.0.0.1       |
-| FRP_LOCAL_HTTP_PORT   | Local port of the HTTP service                 | No       | 80              |
-| FRP_REMOTE_HTTP_PORT  | Remote public port to expose the HTTP service  | No       | 80              |
-| FRP_LOCAL_HTTPS_PORT  | Local port of the HTTPS service                | No       | 443             |
-| FRP_REMOTE_HTTPS_PORT | Remote public port to expose the HTTPS service | No       | 443             |
+| Variable              | Description                                                     | Required | Example         |
+| --------------------- | --------------------------------------------------------------- | -------- | --------------- |
+| FRP_HOST              | Hostname or IP address of the frp server                        | Yes      | your.frp.server |
+| FRP_PORT              | Port number of the frp server                                   | Yes      | 7000            |
+| FRP_TOKEN             | Authentication token for the connection                         | Yes      | StrongToken     |
+| FRP_LOCAL_HOST        | Local host to proxy to (default: `127.0.0.1`)                   | No       | 127.0.0.1       |
+| FRP_LOCAL_HTTP_PORT   | Local port of the HTTP service (default: `80`)                  | No       | 80              |
+| FRP_REMOTE_HTTP_PORT  | Remote public port to expose the HTTP service (default: `80`)   | No       | 80              |
+| FRP_LOCAL_HTTPS_PORT  | Local port of the HTTPS service (default: `443`)                | No       | 443             |
+| FRP_REMOTE_HTTPS_PORT | Remote public port to expose the HTTPS service (default: `443`) | No       | 443             |
 
 
 ## License
