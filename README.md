@@ -6,8 +6,9 @@ This image dynamically generates `frpc.ini` using environment variables.
 
 ## Features
 
-- Based on debian:bookworm-slim.
+- Based on `debian:bookworm-slim`.
 - Lightweight and minimal — no unnecessary packages.
+- Creates TCP tunnels for HTTP (80) and HTTPS (443) services.
 
 ## Usage
 
@@ -19,6 +20,7 @@ docker run -d \
   -e FRP_HOST=your.frp.server \
   -e FRP_PORT=7000 \
   -e FRP_TOKEN=your-token \
+  -e FRP_LOCAL_HOST=127.0.0.1 \  
   -e FRP_LOCAL_HTTP_PORT=80 \
   -e FRP_REMOTE_HTTP_PORT=80 \
   -e FRP_LOCAL_HTTPS_PORT=443 \
@@ -28,10 +30,16 @@ docker run -d \
 
 This starts a container that exposes local ports 80 and 443 to remote ports 80 and 443 on host "your.frp.server"
 
-### With Docker Compose
+### Example with Docker Compose (proxy to another service)
 
 ```yaml
 services:
+  proxy-client-caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    networks:
+      - proxy-client-private
+
   frp-client:
     image: ghcr.io/ldev1281/docker-frp:latest
     restart: unless-stopped
@@ -39,24 +47,33 @@ services:
       FRP_HOST: your.frp.server
       FRP_PORT: 7000
       FRP_TOKEN: your-token
+      FRP_LOCAL_HOST: proxy-client-caddy
       FRP_LOCAL_HTTP_PORT: 80
       FRP_REMOTE_HTTP_PORT: 80
       FRP_LOCAL_HTTPS_PORT: 443
       FRP_REMOTE_HTTPS_PORT: 443
+    networks:
+      - proxy-client-private
+
+networks:
+  proxy-client-private:
+    driver: bridge
 ```
+
+In this example, `frp-client` proxies traffic to `proxy-client-caddy` inside the same Docker network.
 
 ## Environment Variables
 
-| Variable              | Description                                                     | Required | Example         |
-| --------------------- | --------------------------------------------------------------- | -------- | --------------- |
-| FRP_HOST              | Hostname or IP address of the frp server                        | Yes      | your.frp.server |
-| FRP_PORT              | Port number of the frp server                                   | Yes      | 7000            |
-| FRP_TOKEN             | Authentication token for the connection                         | Yes      | StrongToken     |
-| FRP_LOCAL_HOST        | Local host to proxy to (default: `127.0.0.1`)                   | No       | 127.0.0.1       |
-| FRP_LOCAL_HTTP_PORT   | Local port of the HTTP service (default: `80`)                  | No       | 80              |
-| FRP_REMOTE_HTTP_PORT  | Remote public port to expose the HTTP service (default: `80`)   | No       | 80              |
-| FRP_LOCAL_HTTPS_PORT  | Local port of the HTTPS service (default: `443`)                | No       | 443             |
-| FRP_REMOTE_HTTPS_PORT | Remote public port to expose the HTTPS service (default: `443`) | No       | 443             |
+| Variable              | Description                                                     | Required | Default              | Example         |
+| --------------------- | --------------------------------------------------------------- | -------- | -------------------- | --------------- |
+| FRP_HOST              | Hostname or IP address of the frp server                        | Yes      | —                    | your.frp.server |
+| FRP_PORT              | Port number of the frp server                                   | Yes      | —                    | 7000            |
+| FRP_TOKEN             | Authentication token for the connection                         | Yes      | —                    | StrongToken     |
+| FRP_LOCAL_HOST        | Local host to proxy to                                          | No       | `proxy-client-caddy` | 127.0.0.1       |
+| FRP_LOCAL_HTTP_PORT   | Local port of the HTTP service                                  | No       | `80`                  | 8080            |
+| FRP_REMOTE_HTTP_PORT  | Remote public port to expose the HTTP service                   | No       | `80`                  | 8080            |
+| FRP_LOCAL_HTTPS_PORT  | Local port of the HTTPS service                                 | No       | `443`                 | 8443            |
+| FRP_REMOTE_HTTPS_PORT | Remote public port to expose the HTTPS service                  | No       | `443`                 | 8443            |
 
 
 ## License
